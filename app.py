@@ -11,8 +11,25 @@ import uuid
 st.set_page_config(page_title="Cardápio Online", layout="wide")
 
 # ----- CONEXÃO COM BANCO -----
+# Conectar ao banco
 conn = sqlite3.connect("cardapio.db", check_same_thread=False)
 cursor = conn.cursor()
+
+# Criar tabela de configurações se não existir
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS configuracoes (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    loja_aberta INTEGER DEFAULT 1,
+    whatsapp TEXT DEFAULT '',
+    tema TEXT DEFAULT 'Claro',
+    logo TEXT DEFAULT ''
+)
+""")
+
+# Inserir linha padrão se não existir
+cursor.execute("INSERT OR IGNORE INTO configuracoes (id) VALUES (1)")
+conn.commit()
+
 
 # ----- FUNÇÕES AUXILIARES -----
 def salvar_imagem(imagem):
