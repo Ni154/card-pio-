@@ -29,6 +29,44 @@ CREATE TABLE IF NOT EXISTS configuracoes (
 # Inserir linha padrão se não existir
 cursor.execute("INSERT OR IGNORE INTO configuracoes (id) VALUES (1)")
 conn.commit()
+# Criar tabela de categorias
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS categorias (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT
+)
+""")
+
+# Inserir categoria padrão se não houver nenhuma
+cursor.execute("SELECT COUNT(*) FROM categorias")
+if cursor.fetchone()[0] == 0:
+    cursor.execute("INSERT INTO categorias (nome) VALUES ('Lanches')")
+    conn.commit()
+
+# Criar tabela de produtos
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS produtos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT,
+    descricao TEXT,
+    preco REAL,
+    imagem TEXT,
+    categoria TEXT
+)
+""")
+
+# Criar tabela de pedidos
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS pedidos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cliente_nome TEXT,
+    endereco TEXT,
+    pagamento TEXT,
+    itens TEXT,
+    data TEXT,
+    status TEXT DEFAULT 'Pendente'
+)
+""")
 
 
 # ----- FUNÇÕES AUXILIARES -----
